@@ -1,0 +1,71 @@
+      {'name': 'منتزه السودة', 'desc': 'أعلى قمة في المملكة بأجواء باردة وضباب.'},
+      {'name': 'قرية رجال ألمع', 'desc': 'قرية تراثية عريقة وقصور حجرية فريدة.'},
+    ];
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('وجهات عسير'),
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.favorite),
+            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const FavScr())),
+          )
+        ],
+      ),
+      body: ListView.builder(
+        itemCount: places.length,
+        itemBuilder: (ctx, i) => ListTile(
+          title: Text(places[i]['name']!),
+          trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => DetailScr(place: places[i]))),
+        ),
+      ),
+    );
+  }
+}
+
+class DetailScr extends StatelessWidget {
+  final Map<String, String> place;
+  const DetailScr({super.key, required this.place});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(place['name']!), backgroundColor: Colors.green, foregroundColor: Colors.white),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Text(place['desc']!, style: const TextStyle(fontSize: 18)),
+            const Spacer(),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white),
+              onPressed: () {
+                if (!favs.contains(place['name'])) favs.add(place['name']!);
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تمت الإضافة للمفضلة')));
+              },
+              child: const Text('إضافة للمفضلة'),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class FavScr extends StatelessWidget {
+  const FavScr({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('المفضلة'), backgroundColor: Colors.green, foregroundColor: Colors.white),
+      body: ListView.builder(
+        itemCount: favs.length,
+        itemBuilder: (ctx, i) => ListTile(title: Text(favs[i]), leading: const Icon(Icons.favorite, color: Colors.red)),
+      ),
+    );
+  }
+}
